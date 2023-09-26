@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,7 @@ public class PlayerControl : MonoBehaviour
     #region 组件的声明
     public Rigidbody2D rb;
     public SpriteRenderer sr;
+    public PhysicsCheck pc;
     #endregion
 
     #region 类创建的对象的声明
@@ -21,7 +23,9 @@ public class PlayerControl : MonoBehaviour
     #endregion
 
     #region 变量
+    [Header("基础参数")]
     public float speed;
+    public float jumpForce;
     #endregion
 
     #region Awake()
@@ -31,8 +35,11 @@ public class PlayerControl : MonoBehaviour
         // 获得组件
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
+        pc = GetComponent<PhysicsCheck>();
         // 类的初始化
         inputControl = new PlayerInputControl();
+        // 事件的注册
+        inputControl.Gameplay.Jump.started += Jump;
     }
     #endregion
 
@@ -63,6 +70,16 @@ public class PlayerControl : MonoBehaviour
         Move();
     }
     #endregion
+
+
+    // // 测试
+    // private void OnTriggerStay2D(Collider2D other)
+    // {
+    //     Debug.Log(other.name);
+    // }
+
+
+
 
     #region 方法
     // 启动 InputSystem 系统
@@ -100,5 +117,16 @@ public class PlayerControl : MonoBehaviour
         transform.localScale = new Vector3(faceDir, 1, 1);
     }
 
+
+    // 跳
+    private void Jump(InputAction.CallbackContext context)
+    {
+        if (pc.isFloor)
+        {
+            rb.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
+
+        }
+    }
     #endregion
+
 }
