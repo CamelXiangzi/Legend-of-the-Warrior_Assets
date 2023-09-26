@@ -6,13 +6,16 @@ public class PlayerAnimation : MonoBehaviour
 {
     public Animator animator;
     public Rigidbody2D rb;
-    public PhysicsCheck pc;
+    public PhysicsCheck phC;
+    public PlayerControl plC;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
-        pc = GetComponent<PhysicsCheck>();
+        phC = GetComponent<PhysicsCheck>();
+        plC = GetComponent<PlayerControl>();
+
     }
 
     private void Update()
@@ -24,6 +27,18 @@ public class PlayerAnimation : MonoBehaviour
     {
         animator.SetFloat("velocityX", Mathf.Abs(rb.velocity.x));
         animator.SetFloat("velocityY", rb.velocity.y);
-        animator.SetBool("isFloor", pc.isFloor);
+        animator.SetBool("isFloor", phC.isFloor);
+        animator.SetBool("isDead", plC.isDead);
+        animator.SetBool("isAttack", plC.isAttack);
     }
+
+    public void PlayHurt()
+    {
+        animator.SetTrigger("Hurt");
+    }
+
+    public void PlayAttack(){
+        animator.SetTrigger("attack");
+    }
+
 }

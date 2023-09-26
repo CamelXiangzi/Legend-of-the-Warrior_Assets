@@ -13,7 +13,12 @@ public class Attack : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D other)
     {
-        other.GetComponent<Character>().TakeDamage(this);
+        // 判断 other 身上的 GetComponent<Character>() 是否有代码
+        if (other.GetComponent<Character>() != null)
+        {
+            other.GetComponent<Character>().TakeDamage(this);
+
+        }
     }
 }
 

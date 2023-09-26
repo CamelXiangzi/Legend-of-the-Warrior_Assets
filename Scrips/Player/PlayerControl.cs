@@ -12,6 +12,8 @@ public class PlayerControl : MonoBehaviour
     public Rigidbody2D rb;
     public SpriteRenderer sr;
     public PhysicsCheck pc;
+    public PlayerAnimation pA;
+    public CapsuleCollider2D coll;
     #endregion
 
     #region 类创建的对象的声明
@@ -26,7 +28,17 @@ public class PlayerControl : MonoBehaviour
     [Header("基础参数")]
     public float speed;
     public float jumpForce;
+    public float HurtForce;
+    [Header("状态")]
+    public bool isHurt;
+    public bool isDead;
+    public bool isAttack;
     #endregion
+
+    [Header("物理材质")]
+    public PhysicsMaterial2D wall;
+    public PhysicsMaterial2D floor;
+
 
     #region Awake()
     // 类的初始化,组件的获得
@@ -36,13 +48,15 @@ public class PlayerControl : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         pc = GetComponent<PhysicsCheck>();
+        pA = GetComponent<PlayerAnimation>();
+        coll = GetComponent<CapsuleCollider2D>();
         // 类的初始化
         inputControl = new PlayerInputControl();
         // 事件的注册
         inputControl.Gameplay.Jump.started += Jump;
+        inputControl.Gameplay.J.started += PlayerAttack;
     }
     #endregion
-
 
     #region Start()
     // 变量的初始化
@@ -58,6 +72,8 @@ public class PlayerControl : MonoBehaviour
     {
         // 获得移动方向
         inputDirection = inputControl.Gameplay.Move.ReadValue<Vector2>();
+        // 切换物理材质
+
     }
     #endregion
 
@@ -66,8 +82,11 @@ public class PlayerControl : MonoBehaviour
     // 通常与物理有关的，我们都放在 FixedUpdate()
     private void FixedUpdate()
     {
-        // 人物移动
-        Move();
+        if (!isHurt && !isAttack)
+        {
+            // 人物移动
+            Move();
+        }
     }
     #endregion
 
@@ -127,6 +146,38 @@ public class PlayerControl : MonoBehaviour
 
         }
     }
+
+    public void GetHurt(Transform attacker)
+    {
+        isHurt = true;
+        // 把速度停下来
+        rb.velocity = Vector2.zero;
+        // normalized 归一化，我只需要确定方向，而不是要具体的值
+        Vector2 dir = new Vector2((transform.position.x - attacker.transform.position.x), 0).normalized;
+
+        rb.AddForce(HurtForce * dir, ForceMode2D.Impulse);
+    }
+
+    public void PlayerDead()
+    {
+        isDead = true;
+        // 关闭玩家的控制权
+        inputControl.Gameplay.Disable();
+    }
+
+
+    private void PlayerAttack(InputAction.CallbackContext context)
+    {
+        pA.PlayAttack();
+        isAttack = true;
+    }
+
+    // 切换物理材质(摩擦力)
+    private void CheckState()
+    {
+        coll.sharedMaterial = pc.isFloor ? floor : wall;
+    }
+
     #endregion
 
 }
