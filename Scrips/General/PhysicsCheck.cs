@@ -18,6 +18,7 @@ public class PhysicsCheck : MonoBehaviour
     public float checkRaduis;
     // 需要检测的图层
     public LayerMask FloorLayer;
+    public float buttomOffsetX;
 
     [Header("状态")]
     public bool isFloor;
@@ -33,6 +34,11 @@ public class PhysicsCheck : MonoBehaviour
             rightOffset = new Vector2((cC.bounds.size.x + cC.offset.x) / 2, cC.bounds.size.y / 2);
             leftOffset = new Vector2(-rightOffset.x, rightOffset.y);
         }
+    }
+
+    private void Start()
+    {
+        buttomOffsetX = buttomOffset.x;
     }
 
     private void Update()

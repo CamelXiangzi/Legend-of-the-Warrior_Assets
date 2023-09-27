@@ -168,8 +168,11 @@ public class PlayerControl : MonoBehaviour
 
     private void PlayerAttack(InputAction.CallbackContext context)
     {
-        pA.PlayAttack();
-        isAttack = true;
+        if (!isHurt)
+        {
+            pA.PlayAttack();
+            isAttack = true;
+        }
     }
 
     // 切换物理材质(摩擦力)
