@@ -26,6 +26,7 @@ public class Character : MonoBehaviour
     public UnityEvent<Transform> OnTakeDamage;
     // 死亡事件
     public UnityEvent OnDie;
+    public UnityEvent<Character> OnHealthChange;
 
     private void Awake()
     {
@@ -83,6 +84,11 @@ public class Character : MonoBehaviour
                     OnDie.Invoke();
                 }
             }
+        }
+
+        if (OnHealthChange != null)
+        {
+            OnHealthChange.Invoke(this);
         }
     }
 
