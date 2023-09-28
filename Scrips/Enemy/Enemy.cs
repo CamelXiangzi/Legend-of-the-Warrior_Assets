@@ -44,6 +44,7 @@ public class Enemy : MonoBehaviour
     public float checkDistance;
     public LayerMask attackLayer;
 
+
     protected virtual void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -183,6 +184,10 @@ public class Enemy : MonoBehaviour
         Destroy(this.gameObject);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="state">当前状态</param>
     // 切换状态
     public void SwitchState(NPCState state)
     {
